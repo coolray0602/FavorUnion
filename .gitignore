@@ -1,0 +1,39 @@
+# Unity 專案常用忽略設定
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+Recordings/
+
+# 自動產生的 Asset meta 資料
+sysinfo.txt
+
+# Rider / VSCode / VS 等 IDE 相關
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# 平台輸出
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+*.dll
+
+# 其他
+.DS_Store
+Thumbs.db
