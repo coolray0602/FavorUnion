@@ -126,11 +126,11 @@ public class PlayerCtrl : MonoBehaviour
 
     void HandleTouchLook()
     {
-        if (Input.touchCount > 0)
+        for (int i = 0; i < Input.touchCount; i++)
         {
-            Touch t = Input.GetTouch(0);
+            Touch t = Input.GetTouch(i);
 
-            // 只在右半邊控制視角
+            // 只處理右半邊的手指（左半邊可能是虛擬搖桿）
             if (t.position.x > Screen.width / 2)
             {
                 if (t.phase == TouchPhase.Began)
@@ -140,10 +140,10 @@ public class PlayerCtrl : MonoBehaviour
                 }
                 else if (t.phase == TouchPhase.Moved && isTouching)
                 {
-                    Vector2 delta = t.deltaPosition * 0.2f; // 調整靈敏度
+                    Vector2 delta = t.deltaPosition * 0.2f;
                     transform.Rotate(0, -delta.x, 0);
 
-                    pitch -= delta.y * 0.2f;
+                    pitch += delta.y * 0.2f;
                     pitch = Mathf.Clamp(pitch, -40f, 40f);
                     eye.transform.localEulerAngles = new Vector3(pitch, 0, 0);
                 }
