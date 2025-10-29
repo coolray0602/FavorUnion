@@ -141,7 +141,7 @@ public class PlayerCtrl : MonoBehaviour
                 else if (t.phase == TouchPhase.Moved && isTouching)
                 {
                     Vector2 delta = t.deltaPosition * 0.2f; // 調整靈敏度
-                    transform.Rotate(0, delta.x, 0);
+                    transform.Rotate(0, -delta.x, 0);
 
                     pitch -= delta.y * 0.2f;
                     pitch = Mathf.Clamp(pitch, -40f, 40f);
