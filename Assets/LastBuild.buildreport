@@ -1,0 +1,1104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4071953562543065894
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13800, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializedDependencies:
+  - key: Required by Scripts
+    value: []
+    icon: class/MonoScript
+    size: 0
+  - key: AI Module
+    value:
+    - NavMeshAgent
+    - NavMeshData
+    - NavMeshProjectSettings
+    - NavMeshSettings
+    icon: package/com.unity.modules.ai
+    size: 0
+  - key: NavMeshAgent
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/NavMeshAgent
+    size: 0
+  - key: Assets/Scenes/FavorUnion.unity
+    value: []
+    icon: class/SceneAsset
+    size: 0
+  - key: NavMeshData
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/NavMeshData
+    size: 0
+  - key: NavMeshProjectSettings
+    value: []
+    icon: class/NavMeshProjectSettings
+    size: 0
+  - key: NavMeshSettings
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/NavMeshSettings
+    size: 0
+  - key: Animation Module
+    value:
+    - AnimationClip
+    - Animator
+    - AnimatorController
+    - AnimatorOverrideController
+    - Avatar
+    - Motion
+    - RuntimeAnimatorController
+    icon: package/com.unity.modules.animation
+    size: 0
+  - key: AnimationClip
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/AnimationClip
+    size: 0
+  - key: Animator
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Animator
+    size: 0
+  - key: AnimatorController
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/AnimatorController
+    size: 0
+  - key: AnimatorOverrideController
+    value: []
+    icon: class/AnimatorOverrideController
+    size: 0
+  - key: Avatar
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Avatar
+    size: 0
+  - key: Motion
+    value: []
+    icon: class/Motion
+    size: 0
+  - key: RuntimeAnimatorController
+    value: []
+    icon: class/RuntimeAnimatorController
+    size: 0
+  - key: Audio Module
+    value:
+    - AudioBehaviour
+    - AudioClip
+    - AudioListener
+    - AudioManager
+    - AudioSource
+    - SampleClip
+    icon: package/com.unity.modules.audio
+    size: 0
+  - key: AudioBehaviour
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/AudioBehaviour
+    size: 0
+  - key: AudioClip
+    value: []
+    icon: class/AudioClip
+    size: 0
+  - key: AudioListener
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/AudioListener
+    size: 0
+  - key: AudioManager
+    value: []
+    icon: class/AudioManager
+    size: 0
+  - key: AudioSource
+    value: []
+    icon: class/AudioSource
+    size: 0
+  - key: SampleClip
+    value: []
+    icon: class/SampleClip
+    size: 0
+  - key: Core Module
+    value:
+    - Behaviour
+    - BuildSettings
+    - Camera
+    - Component
+    - ComputeShader
+    - Cubemap
+    - CubemapArray
+    - DelayedCallManager
+    - EditorExtension
+    - GameManager
+    - GameObject
+    - GlobalGameManager
+    - GraphicsSettings
+    - InputManager
+    - LevelGameManager
+    - Light
+    - LightProbes
+    - LightingSettings
+    - LightmapSettings
+    - LowerResBlitTexture
+    - Material
+    - Mesh
+    - MeshFilter
+    - MeshRenderer
+    - MonoBehaviour
+    - MonoManager
+    - MonoScript
+    - NamedObject
+    - Object
+    - PlayerSettings
+    - PreloadData
+    - QualitySettings
+    - RectTransform
+    - ReflectionProbe
+    - RenderSettings
+    - RenderTexture
+    - Renderer
+    - ResourceManager
+    - RuntimeInitializeOnLoadManager
+    - Shader
+    - ShaderNameRegistry
+    - SkinnedMeshRenderer
+    - Skybox
+    - SortingGroup
+    - Sprite
+    - SpriteAtlas
+    - SpriteRenderer
+    - TagManager
+    - TextAsset
+    - Texture
+    - Texture2D
+    - Texture2DArray
+    - Texture3D
+    - TimeManager
+    - Transform
+    - Required by AI Module
+    - Required by Animation Module
+    - Required by Audio Module
+    - Required by IMGUI Module
+    - Required by Input Module
+    - Required by InputLegacy Module
+    - Required by JSONSerialize Module
+    - Required by ParticleSystem Module
+    - Required by Physics Module
+    - Required by Physics2D Module
+    - Required by RuntimeInitializeOnLoadManagerInitializer Module
+    - Required by SpriteMask Module
+    - Required by Subsystems Module
+    - Required by TextCoreFontEngine Module
+    - Required by TextCoreTextEngine Module
+    - Required by TextRendering Module
+    - Required by UI Module
+    - Required by UIElements Module
+    - Required by VFX Module
+    - Required by VR Module
+    - Required by WebGL Module
+    - Required by XR Module
+    icon: package/com.unity.modules.core
+    size: 0
+  - key: Behaviour
+    value: []
+    icon: class/Behaviour
+    size: 0
+  - key: BuildSettings
+    value: []
+    icon: class/BuildSettings
+    size: 0
+  - key: Camera
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Camera
+    size: 0
+  - key: Component
+    value: []
+    icon: class/Component
+    size: 0
+  - key: ComputeShader
+    value: []
+    icon: class/ComputeShader
+    size: 0
+  - key: Cubemap
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Cubemap
+    size: 0
+  - key: CubemapArray
+    value: []
+    icon: class/CubemapArray
+    size: 0
+  - key: DelayedCallManager
+    value: []
+    icon: class/DelayedCallManager
+    size: 0
+  - key: EditorExtension
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/EditorExtension
+    size: 0
+  - key: GameManager
+    value: []
+    icon: class/GameManager
+    size: 0
+  - key: GameObject
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/GameObject
+    size: 0
+  - key: GlobalGameManager
+    value: []
+    icon: class/GlobalGameManager
+    size: 0
+  - key: GraphicsSettings
+    value: []
+    icon: class/GraphicsSettings
+    size: 0
+  - key: InputManager
+    value: []
+    icon: class/InputManager
+    size: 0
+  - key: LevelGameManager
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/LevelGameManager
+    size: 0
+  - key: Light
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Light
+    size: 0
+  - key: LightProbes
+    value: []
+    icon: class/LightProbes
+    size: 0
+  - key: LightingSettings
+    value: []
+    icon: class/LightingSettings
+    size: 0
+  - key: LightmapSettings
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/LightmapSettings
+    size: 0
+  - key: LowerResBlitTexture
+    value: []
+    icon: class/LowerResBlitTexture
+    size: 0
+  - key: Material
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Material
+    size: 0
+  - key: Mesh
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Mesh
+    size: 0
+  - key: MeshFilter
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/MeshFilter
+    size: 0
+  - key: MeshRenderer
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/MeshRenderer
+    size: 0
+  - key: MonoBehaviour
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/MonoBehaviour
+    size: 0
+  - key: MonoManager
+    value: []
+    icon: class/MonoManager
+    size: 0
+  - key: MonoScript
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/MonoScript
+    size: 0
+  - key: NamedObject
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/NamedObject
+    size: 0
+  - key: Object
+    value: []
+    icon: class/Object
+    size: 0
+  - key: PlayerSettings
+    value: []
+    icon: class/PlayerSettings
+    size: 0
+  - key: PreloadData
+    value: []
+    icon: class/PreloadData
+    size: 0
+  - key: QualitySettings
+    value: []
+    icon: class/QualitySettings
+    size: 0
+  - key: RectTransform
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/RectTransform
+    size: 0
+  - key: ReflectionProbe
+    value: []
+    icon: class/ReflectionProbe
+    size: 0
+  - key: RenderSettings
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/RenderSettings
+    size: 0
+  - key: RenderTexture
+    value: []
+    icon: class/RenderTexture
+    size: 0
+  - key: Renderer
+    value: []
+    icon: class/Renderer
+    size: 0
+  - key: ResourceManager
+    value: []
+    icon: class/ResourceManager
+    size: 0
+  - key: RuntimeInitializeOnLoadManager
+    value: []
+    icon: class/RuntimeInitializeOnLoadManager
+    size: 0
+  - key: Shader
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Shader
+    size: 0
+  - key: ShaderNameRegistry
+    value: []
+    icon: class/ShaderNameRegistry
+    size: 0
+  - key: SkinnedMeshRenderer
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/SkinnedMeshRenderer
+    size: 0
+  - key: Skybox
+    value: []
+    icon: class/Skybox
+    size: 0
+  - key: SortingGroup
+    value: []
+    icon: class/SortingGroup
+    size: 0
+  - key: Sprite
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Sprite
+    size: 0
+  - key: SpriteAtlas
+    value: []
+    icon: class/SpriteAtlas
+    size: 0
+  - key: SpriteRenderer
+    value: []
+    icon: class/SpriteRenderer
+    size: 0
+  - key: TagManager
+    value: []
+    icon: class/TagManager
+    size: 0
+  - key: TextAsset
+    value: []
+    icon: class/TextAsset
+    size: 0
+  - key: Texture
+    value: []
+    icon: class/Texture
+    size: 0
+  - key: Texture2D
+    value: []
+    icon: class/Texture2D
+    size: 0
+  - key: Texture2DArray
+    value: []
+    icon: class/Texture2DArray
+    size: 0
+  - key: Texture3D
+    value: []
+    icon: class/Texture3D
+    size: 0
+  - key: TimeManager
+    value: []
+    icon: class/TimeManager
+    size: 0
+  - key: Transform
+    value: []
+    icon: class/Transform
+    size: 0
+  - key: Required by AI Module
+    value: []
+    icon: package/com.unity.modules.ai
+    size: 0
+  - key: Required by Animation Module
+    value: []
+    icon: package/com.unity.modules.animation
+    size: 0
+  - key: Required by Audio Module
+    value: []
+    icon: package/com.unity.modules.audio
+    size: 0
+  - key: Required by IMGUI Module
+    value: []
+    icon: package/com.unity.modules.imgui
+    size: 0
+  - key: Required by Input Module
+    value: []
+    icon: package/com.unity.modules.input
+    size: 0
+  - key: Required by InputLegacy Module
+    value: []
+    icon: package/com.unity.modules.inputlegacy
+    size: 0
+  - key: Required by JSONSerialize Module
+    value: []
+    icon: package/com.unity.modules.jsonserialize
+    size: 0
+  - key: Required by ParticleSystem Module
+    value: []
+    icon: package/com.unity.modules.particlesystem
+    size: 0
+  - key: Required by Physics Module
+    value: []
+    icon: package/com.unity.modules.physics
+    size: 0
+  - key: Required by Physics2D Module
+    value: []
+    icon: package/com.unity.modules.physics2d
+    size: 0
+  - key: Required by RuntimeInitializeOnLoadManagerInitializer Module
+    value: []
+    icon: package/com.unity.modules.runtimeinitializeonloadmanagerinitializer
+    size: 0
+  - key: Required by SpriteMask Module
+    value: []
+    icon: package/com.unity.modules.spritemask
+    size: 0
+  - key: Required by Subsystems Module
+    value: []
+    icon: package/com.unity.modules.subsystems
+    size: 0
+  - key: Required by TextCoreFontEngine Module
+    value: []
+    icon: package/com.unity.modules.textcorefontengine
+    size: 0
+  - key: Required by TextCoreTextEngine Module
+    value: []
+    icon: package/com.unity.modules.textcoretextengine
+    size: 0
+  - key: Required by TextRendering Module
+    value: []
+    icon: package/com.unity.modules.textrendering
+    size: 0
+  - key: Required by UI Module
+    value: []
+    icon: package/com.unity.modules.ui
+    size: 0
+  - key: Required by UIElements Module
+    value: []
+    icon: package/com.unity.modules.uielements
+    size: 0
+  - key: Required by VFX Module
+    value: []
+    icon: package/com.unity.modules.vfx
+    size: 0
+  - key: Required by VR Module
+    value: []
+    icon: package/com.unity.modules.vr
+    size: 0
+  - key: Required by WebGL Module
+    value: []
+    icon: package/com.unity.modules.webgl
+    size: 0
+  - key: Required by XR Module
+    value: []
+    icon: package/com.unity.modules.xr
+    size: 0
+  - key: IMGUI Module
+    value:
+    - Required by UIElements Module
+    icon: package/com.unity.modules.imgui
+    size: 0
+  - key: Input Module
+    value:
+    - Required by VR Module
+    - Required by XR Module
+    icon: package/com.unity.modules.input
+    size: 0
+  - key: InputLegacy Module
+    value:
+    - Required by IMGUI Module
+    - Required by UIElements Module
+    icon: package/com.unity.modules.inputlegacy
+    size: 0
+  - key: JSONSerialize Module
+    value:
+    - Required by Input Module
+    - Required by RuntimeInitializeOnLoadManagerInitializer Module
+    - Required by Subsystems Module
+    - Required by UIElements Module
+    - Required by VR Module
+    - Required by XR Module
+    icon: package/com.unity.modules.jsonserialize
+    size: 0
+  - key: ParticleSystem Module
+    value:
+    - ParticleSystem
+    - ParticleSystemRenderer
+    icon: package/com.unity.modules.particlesystem
+    size: 0
+  - key: ParticleSystem
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/ParticleSystem
+    size: 0
+  - key: ParticleSystemRenderer
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/ParticleSystemRenderer
+    size: 0
+  - key: Physics Module
+    value:
+    - BoxCollider
+    - CapsuleCollider
+    - CharacterController
+    - Collider
+    - MeshCollider
+    - PhysicMaterial
+    - PhysicsManager
+    - Rigidbody
+    - Required by VR Module
+    - Required by XR Module
+    icon: package/com.unity.modules.physics
+    size: 0
+  - key: BoxCollider
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/BoxCollider
+    size: 0
+  - key: CapsuleCollider
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/CapsuleCollider
+    size: 0
+  - key: CharacterController
+    value: []
+    icon: class/CharacterController
+    size: 0
+  - key: Collider
+    value: []
+    icon: class/Collider
+    size: 0
+  - key: MeshCollider
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/MeshCollider
+    size: 0
+  - key: PhysicMaterial
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/PhysicMaterial
+    size: 0
+  - key: PhysicsManager
+    value: []
+    icon: class/PhysicsManager
+    size: 0
+  - key: Rigidbody
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Rigidbody
+    size: 0
+  - key: Physics2D Module
+    value:
+    - Collider2D
+    - Physics2DSettings
+    icon: package/com.unity.modules.physics2d
+    size: 0
+  - key: Collider2D
+    value: []
+    icon: class/Collider2D
+    size: 0
+  - key: Physics2DSettings
+    value: []
+    icon: class/Physics2DSettings
+    size: 0
+  - key: RuntimeInitializeOnLoadManagerInitializer Module
+    value:
+    - RuntimeInitializeOnLoadManagerInitializer is always required
+    icon: package/com.unity.modules.runtimeinitializeonloadmanagerinitializer
+    size: 0
+  - key: RuntimeInitializeOnLoadManagerInitializer is always required
+    value: []
+    icon: class/DefaultAsset
+    size: 0
+  - key: SharedInternals Module
+    value:
+    - Required by AI Module
+    - Required by Animation Module
+    - Required by Audio Module
+    - Required by Core Module
+    - Required by IMGUI Module
+    - Required by Input Module
+    - Required by InputLegacy Module
+    - Required by JSONSerialize Module
+    - Required by ParticleSystem Module
+    - Required by Physics Module
+    - Required by Physics2D Module
+    - Required by RuntimeInitializeOnLoadManagerInitializer Module
+    - Required by SpriteMask Module
+    - Required by Subsystems Module
+    - Required by TextCoreFontEngine Module
+    - Required by TextCoreTextEngine Module
+    - Required by TextRendering Module
+    - Required by UI Module
+    - Required by UIElements Module
+    - Required by VFX Module
+    - Required by VR Module
+    - Required by WebGL Module
+    - Required by XR Module
+    icon: package/com.unity.modules.sharedinternals
+    size: 0
+  - key: Required by Core Module
+    value: []
+    icon: package/com.unity.modules.core
+    size: 0
+  - key: SpriteMask Module
+    value: []
+    icon: package/com.unity.modules.spritemask
+    size: 0
+  - key: Subsystems Module
+    value:
+    - Required by XR Module
+    icon: package/com.unity.modules.subsystems
+    size: 0
+  - key: TextCoreFontEngine Module
+    value:
+    - Required by TextCoreTextEngine Module
+    - Required by UIElements Module
+    icon: package/com.unity.modules.textcorefontengine
+    size: 0
+  - key: TextCoreTextEngine Module
+    value:
+    - Required by IMGUI Module
+    - Required by UIElements Module
+    icon: package/com.unity.modules.textcoretextengine
+    size: 0
+  - key: TextRendering Module
+    value:
+    - Font
+    - Required by IMGUI Module
+    - Required by TextCoreFontEngine Module
+    - Required by TextCoreTextEngine Module
+    - Required by UI Module
+    - Required by UIElements Module
+    icon: package/com.unity.modules.textrendering
+    size: 0
+  - key: Font
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Font
+    size: 0
+  - key: UI Module
+    value:
+    - Canvas
+    - CanvasGroup
+    - CanvasRenderer
+    - Required by UIElements Module
+    icon: package/com.unity.modules.ui
+    size: 0
+  - key: Canvas
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/Canvas
+    size: 0
+  - key: CanvasGroup
+    value: []
+    icon: class/CanvasGroup
+    size: 0
+  - key: CanvasRenderer
+    value:
+    - Assets/Scenes/FavorUnion.unity
+    icon: class/CanvasRenderer
+    size: 0
+  - key: UIElements Module
+    value: []
+    icon: package/com.unity.modules.uielements
+    size: 0
+  - key: VFX Module
+    value:
+    - VFXManager
+    - VFXRenderer
+    - VisualEffect
+    - VisualEffectAsset
+    - VisualEffectObject
+    icon: package/com.unity.modules.vfx
+    size: 0
+  - key: VFXManager
+    value: []
+    icon: class/VFXManager
+    size: 0
+  - key: VFXRenderer
+    value: []
+    icon: class/VFXRenderer
+    size: 0
+  - key: VisualEffect
+    value: []
+    icon: class/VisualEffect
+    size: 0
+  - key: VisualEffectAsset
+    value: []
+    icon: class/VisualEffectAsset
+    size: 0
+  - key: VisualEffectObject
+    value: []
+    icon: class/VisualEffectObject
+    size: 0
+  - key: VR Module
+    value: []
+    icon: package/com.unity.modules.vr
+    size: 0
+  - key: WebGL Module
+    value:
+    - WebGL is always required
+    icon: package/com.unity.modules.webgl
+    size: 0
+  - key: WebGL is always required
+    value: []
+    icon: class/DefaultAsset
+    size: 0
+  - key: XR Module
+    value:
+    - Required by VR Module
+    icon: package/com.unity.modules.xr
+    size: 0
+  modules:
+  - AI Module
+  - Animation Module
+  - Audio Module
+  - Core Module
+  - IMGUI Module
+  - Input Module
+  - InputLegacy Module
+  - JSONSerialize Module
+  - ParticleSystem Module
+  - Physics Module
+  - Physics2D Module
+  - RuntimeInitializeOnLoadManagerInitializer Module
+  - SharedInternals Module
+  - SpriteMask Module
+  - Subsystems Module
+  - TextCoreFontEngine Module
+  - TextCoreTextEngine Module
+  - TextRendering Module
+  - UI Module
+  - UIElements Module
+  - VFX Module
+  - VR Module
+  - WebGL Module
+  - XR Module
+  serializedSizes: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  totalSize: 0
+  builtCodePath: C:/Users/ray.liu/FavorUnion/docs/Build/docs.wasm
+  developmentBuild: 0
+--- !u!114 &-942626027361212044
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13805, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1125 &1
+BuildReport:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: LastBuild
+  m_Summary:
+    buildStartTime:
+      serializedVersion: 2
+      ticks: 639015436476417703
+    buildGUID: 1d0a459c66c64162899ce83ecc61cb2f
+    platformName: WebGL
+    platformGroupName: WebGL
+    subtarget: 0
+    options: 2097156
+    assetBundleOptions: 0
+    outputPath: C:/Users/ray.liu/FavorUnion/docs
+    crc: 0
+    totalSize: 169885441
+    totalTimeTicks: 23217290
+    totalErrors: 0
+    totalWarnings: 1
+    buildType: 1
+    buildResult: 1
+  m_Files:
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/csharpactions/boot.config_7kyv.info
+    role: info
+    id: 0
+    totalSize: 40533
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/rsp/17652770098271132461.rsp
+    role: rsp
+    id: 1
+    totalSize: 47870
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/unitylinker_ber2.traceevents
+    role: traceevents
+    id: 2
+    totalSize: 21256
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/il2cpp_conv_g1s3.traceevents
+    role: traceevents
+    id: 3
+    totalSize: 748545
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/csharpactions/UnityClassRegistration.cpp_o3wm.info
+    role: info
+    id: 4
+    totalSize: 1232
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/rsp/6070537824006410562.rsp
+    role: rsp
+    id: 5
+    totalSize: 32128
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/rsp/8995565923215908413.rsp
+    role: rsp
+    id: 6
+    totalSize: 14765
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/csharpactions/build.framework.js_mumr.info
+    role: info
+    id: 7
+    totalSize: 628
+  - path: C:/Users/ray.liu/FavorUnion/docs/Build/docs.framework.js
+    role: js
+    id: 8
+    totalSize: 409111
+  - path: C:/Users/ray.liu/FavorUnion/docs/Build/docs.wasm
+    role: wasm
+    id: 9
+    totalSize: 34333773
+  - path: C:/Users/ray.liu/FavorUnion/Temp/EditorBuildOutput/UnityLinkerToEditorData.json
+    role: json
+    id: 10
+    totalSize: 32962
+  - path: C:/Users/ray.liu/FavorUnion/Temp/EditorBuildOutput/MethodMap.tsv
+    role: tsv
+    id: 11
+    totalSize: 25477196
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/csharpactions/webgl.data_qnm2.info
+    role: info
+    id: 12
+    totalSize: 1850
+  - path: C:/Users/ray.liu/FavorUnion/docs/Build/docs.data
+    role: data
+    id: 13
+    totalSize: 108653516
+  - path: C:/Users/ray.liu/FavorUnion/Library/Bee/artifacts/WebGLdocs.loader.js
+    role: js
+    id: 14
+    totalSize: 21845
+  - path: C:/Users/ray.liu/FavorUnion/docs/Build/docs.loader.js
+    role: js
+    id: 15
+    totalSize: 21845
+  - path: C:/Users/ray.liu/FavorUnion/docs/index.html
+    role: html
+    id: 16
+    totalSize: 4146
+  - path: C:/Users/ray.liu/FavorUnion/docs/manifest.webmanifest
+    role: webmanifest
+    id: 17
+    totalSize: 387
+  - path: C:/Users/ray.liu/FavorUnion/docs/ServiceWorker.js
+    role: js
+    id: 18
+    totalSize: 1039
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/favicon.ico
+    role: ico
+    id: 19
+    totalSize: 2305
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/icons/unity-logo-dark.png
+    role: png
+    id: 20
+    totalSize: 5615
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/icons/unity-logo-light.png
+    role: png
+    id: 21
+    totalSize: 5589
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/progress-bar-empty-dark.png
+    role: png
+    id: 22
+    totalSize: 96
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/progress-bar-empty-light.png
+    role: png
+    id: 23
+    totalSize: 109
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/progress-bar-full-dark.png
+    role: png
+    id: 24
+    totalSize: 74
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/progress-bar-full-light.png
+    role: png
+    id: 25
+    totalSize: 84
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/style.css
+    role: css
+    id: 26
+    totalSize: 823
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/unity-logo-dark.png
+    role: png
+    id: 27
+    totalSize: 3042
+  - path: C:/Users/ray.liu/FavorUnion/docs/TemplateData/unity-logo-light.png
+    role: png
+    id: 28
+    totalSize: 3077
+  m_BuildSteps:
+  - stepName: Build player
+    durationTicks: 23217290
+    depth: 0
+    messages: []
+  - stepName: Preprocess Player
+    durationTicks: 402472
+    depth: 1
+    messages: []
+  - stepName: Prepare For Build
+    durationTicks: 192
+    depth: 1
+    messages: []
+  - stepName: ProducePlayerScriptAssemblies
+    durationTicks: 13088998
+    depth: 1
+    messages: []
+  - stepName: Prebuild Cleanup and Recompile
+    durationTicks: 11503421
+    depth: 2
+    messages: []
+  - stepName: Compile scripts
+    durationTicks: 11171127
+    depth: 3
+    messages: []
+  - stepName: Generate and validate platform script types
+    durationTicks: 148029
+    depth: 3
+    messages: []
+  - stepName: Verify Build setup
+    durationTicks: 1787013
+    depth: 1
+    messages: []
+  - stepName: Check old data build
+    durationTicks: 1453695
+    depth: 2
+    messages: []
+  - stepName: Set up scripts only build
+    durationTicks: 264448
+    depth: 2
+    messages: []
+  - stepName: Prepare assets for target platform
+    durationTicks: 749097
+    depth: 1
+    messages: []
+  - stepName: Prepare splash screen
+    durationTicks: 6491
+    depth: 1
+    messages:
+    - type: 3
+      content: Including Unity Splash Screen logo because 'Show Unity Logo' is enabled.
+  - stepName: Run script only build
+    durationTicks: 280128
+    depth: 1
+    messages: []
+  - stepName: Build scripts DLLs
+    durationTicks: 219357
+    depth: 2
+    messages: []
+  - stepName: GetReferencedAssemblies
+    durationTicks: 5459
+    depth: 3
+    messages: []
+  - stepName: Postprocess built player
+    durationTicks: 5279473
+    depth: 1
+    messages:
+    - type: 2
+      content: 'Saving has no effect. Your class ''UnityEditor.WebGL.HttpServerEditorWrapper''
+        is missing the FilePathAttribute. Use this attribute to specify where to
+        save your ScriptableSingleton.
+
+        Only call Save() and use this attribute
+        if you want your state to survive between sessions of Unity.'
+  - stepName: Setup incremental player build
+    durationTicks: 583162
+    depth: 2
+    messages: []
+  - stepName: Incremental player build
+    durationTicks: 3116456
+    depth: 2
+    messages: []
+  - stepName: Report output files
+    durationTicks: 31541
+    depth: 2
+    messages: []
+  m_Appendices:
+  - {fileID: -4071953562543065894}
+  - {fileID: -942626027361212044}
+  - {fileID: 8194813777298574648}
+  - {fileID: 3123864570293706589}
+  - {fileID: 7494560498039352484}
+--- !u!641289076 &3123864570293706589
+AudioBuildInfo:
+  m_IsAudioDisabled: 0
+  m_AudioClipCount: 0
+  m_AudioMixerCount: 0
+--- !u!1521398425 &7494560498039352484
+VideoBuildInfo:
+  m_VideoClipCount: 0
+  m_IsVideoModuleDisabled: 0
+--- !u!382020655 &8194813777298574648
+PluginBuildInfo:
+  m_RuntimePlugins:
+  - Unity.Burst.Unsafe
+  - GetUserAgent
+  - Unity.VisualScripting.Antlr3.Runtime
+  - nunit.framework
+  m_EditorPlugins:
+  - Unity.VisualScripting.sqlite3
+  - Unity.Plastic.Newtonsoft.Json
+  - Unity.Plastic.Antlr3.Runtime
+  - Unity.VisualScripting.YamlDotNet
+  - Unity.Burst.Cecil.Mdb
+  - Unity.VisualScripting.TextureAssets
+  - zlib64Plastic
+  - Unity.VisualScripting.IonicZip
+  - liblz4Plastic
+  - JetBrains.Rider.PathLocator
+  - Unity.Burst.Cecil.Pdb
+  - Unity.Burst.Cecil
+  - log4netPlastic
+  - Unity.Burst.Cecil.Rocks
+  - lz4x64Plastic
+  - ReportGeneratorMerged
+  - AppleEventIntegration
+  - unityplastic

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6796bc47b078d834895d9d02ab7fbb32, type: 3}
+  m_Name: vet
+  m_EditorClassIdentifier: 
+  id: 3
+  itemName: "\u85CD\u8272\u99AC\u7532"
+  icon: {fileID: 21300000, guid: ee4ef146921516f4b8e341ffa1660a12, type: 3}
+  description: "\u5F9E\u4E8B\u611B\u5FC3\u516C\u76CA\u6D3B\u52D5\u7684\u5FC3\u5713\u6703\u7684\u99AC\u7532"
+  worldPrefab: {fileID: 6956733669108558450, guid: 9bd17ef5aec8ad94e8d5f3248eaf2fa2, type: 3}

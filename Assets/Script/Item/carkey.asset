@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6796bc47b078d834895d9d02ab7fbb32, type: 3}
+  m_Name: carkey
+  m_EditorClassIdentifier: 
+  id: 6
+  itemName: "\u8ECA\u9470\u5319"
+  icon: {fileID: 21300000, guid: 2f607ae1662c5684dbb57d0c01d8bddd, type: 3}
+  description: "\u9019\u662F\u4E00\u628A\u8ECA\u9470\u5319"
+  holdable: 0
+  worldPrefab: {fileID: 5445914418601745778, guid: 9081367b9a9d6fc4eb24b06d68043508, type: 3}
+  keyPlateNumber: 
