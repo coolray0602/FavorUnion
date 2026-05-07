@@ -82,7 +82,6 @@ public class PlayerCtrl : MonoBehaviour
     // ===== 快取 =====
     GameObject cachedNearbyItem;
     GameObject cachedNearbyCar;
-    CursorLockMode lastLockState;
 
     void Start()
     {
@@ -91,7 +90,7 @@ public class PlayerCtrl : MonoBehaviour
         // 在真正裝置上正常判斷
         isMobile = Application.isMobilePlatform;
 
-        isMobile = true; // 🔥 強制開啟手機模式，方便測試
+       // isMobile = true; // 🔥 強制開啟手機模式，方便測試
 
         Debug.Log("isMobile: " + isMobile);
         rb = GetComponent<Rigidbody>();
@@ -134,11 +133,6 @@ public class PlayerCtrl : MonoBehaviour
             animator.SetTrigger("grounded");
             isJumping = false;
             isJumpPreparing = false;
-        }
-        if (Cursor.lockState != lastLockState)
-        {
-            Debug.Log("Cursor LockState changed to: " + Cursor.lockState);
-            lastLockState = Cursor.lockState;
         }
     }
 
