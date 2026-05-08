@@ -93,7 +93,7 @@ public class PlayerCtrl : MonoBehaviour
         // 在真正裝置上正常判斷
         isMobile = Application.isMobilePlatform;
 
-        isMobile = true; // 🔥 強制開啟手機模式，方便測試
+        //isMobile = true; // 🔥 強制開啟手機模式，方便測試
 
         Debug.Log("isMobile: " + isMobile);
         rb = GetComponent<Rigidbody>();
@@ -283,7 +283,7 @@ public class PlayerCtrl : MonoBehaviour
         }
         else if (joystick != null)
         {
-            debugtxt.text="joystickH= "+joystick.Horizontal+" , joystickV= "+joystick.Vertical;
+            //debugtxt.text="joystickH= "+joystick.Horizontal+" , joystickV= "+joystick.Vertical;
             inputH = joystick.Horizontal;
             float joyV = joystick.Vertical;
             inputV = joyV >= 0 ? joyV : joyV * 0.5f;

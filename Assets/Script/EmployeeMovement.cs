@@ -255,7 +255,8 @@ public class EmployeeMovement : MonoBehaviour
         audioSource.time = randomStart;
         audioSource.Play();
 
-        StopAllCoroutines();
+        //StopAllCoroutines();
+        StopCoroutine("StopAfterTime");
         StartCoroutine(StopAfterTime(length));
     }
     IEnumerator StopAfterTime(float time)
@@ -266,16 +267,39 @@ public class EmployeeMovement : MonoBehaviour
         {
             audioSource.Stop();
         }
-    }
+    }    // 添加一個標誌來控制是否允許自言自語
+    private bool isResponding = false;
+    private Coroutine currentBubbleCoroutine;
+    private float lastBubbleTime = 0f;
+    private const float BUBBLE_COOLDOWN = 0.5f;
+
     public void response()
     {
         if (player == null) return;
         player.GetComponent<PlayerCtrl>()?.ShowBubble("工作辛苦了！");
         StartCoroutine(NPCresponse());
     }
+
     public IEnumerator NPCresponse()
     {
+        // 開始回應，禁止自言自語
+        isResponding = true;
+
+        // 清除任何現有的氣泡和協程
+        if (currentBubbleCoroutine != null)
+        {
+            StopCoroutine(currentBubbleCoroutine);
+            currentBubbleCoroutine = null;
+        }
+
+        if (speechBubbleInstance != null)
+        {
+            Destroy(speechBubbleInstance);
+            speechBubbleInstance = null;
+        }
+
         yield return new WaitForSeconds(1f);
+
         if (isBeaten)
         {
             ShowBubble("我不行了…");
@@ -285,50 +309,84 @@ public class EmployeeMovement : MonoBehaviour
             ShowBubble("謝謝關心！");
         }
         PlayTalkingSound(0.8f);
-    }
-    public void ShowBubble(string msg)
-    {
-        // 先銷毀舊氣泡（但不影響正在運行的協程）
+
+        // 等待氣泡顯示足夠的時間後，才允許新的自言自語
+        yield return new WaitForSeconds(2.5f); // 比氣泡消失時間稍長
+
+        isResponding = false;
+
+        // 如果氣泡還在，強制刪除並記錄
         if (speechBubbleInstance != null)
         {
             Destroy(speechBubbleInstance);
             speechBubbleInstance = null;
         }
 
-        // 生成新氣泡
+        if (currentBubbleCoroutine != null)
+        {
+            StopCoroutine(currentBubbleCoroutine);
+            currentBubbleCoroutine = null;
+        }
+    }
+
+    public void ShowBubble(string msg)
+    {
+        // 冷卻檢查
+        if (Time.time - lastBubbleTime < BUBBLE_COOLDOWN)
+        {
+            return;
+        }
+
+        lastBubbleTime = Time.time;
+
+        // 停止舊協程
+        if (currentBubbleCoroutine != null)
+        {
+            StopCoroutine(currentBubbleCoroutine);
+            currentBubbleCoroutine = null;
+
+        }
+
+        // 銷毀舊氣泡
+        if (speechBubbleInstance != null)
+        {
+            Destroy(speechBubbleInstance);
+            speechBubbleInstance = null;
+
+        }
+
+        // 創建新氣泡
         speechBubbleInstance = Instantiate(speechBubblePrefab, transform);
         speechBubbleInstance.transform.localPosition = new Vector3(0f, 1.2f, 0);
 
         var bubble = speechBubbleInstance.GetComponent<SpeechBubble>();
-        if (bubble != null)
-            bubble.SetText(msg);
+        bubble?.SetText(msg);
 
-        // 啟動協程，延時後檢查是否還是最新氣泡
-        StartCoroutine(HideBubbleAfterDelay(speechBubbleInstance, 2f));
+        // 啟動新協程
+        currentBubbleCoroutine = StartCoroutine(HideBubbleAfterDelay(speechBubbleInstance, 2f));
     }
 
     private IEnumerator HideBubbleAfterDelay(GameObject bubble, float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        // 只銷毀當前最新氣泡，避免覆蓋被提前刪除
         if (speechBubbleInstance == bubble)
         {
             Destroy(bubble);
             speechBubbleInstance = null;
         }
+
+        currentBubbleCoroutine = null;
     }
 
-    // ======================================================
-    // 自言自語
-    // ======================================================
     private IEnumerator TalkingRoutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(5f);
 
-            if (speechBubbleInstance != null || isBeaten)
+            // ✅ 重要：回應期間或剛回應完不顯示自言自語
+            if (isResponding || speechBubbleInstance != null || isBeaten)
                 continue;
 
             if (Random.value > 1f / 3f)
@@ -341,15 +399,13 @@ public class EmployeeMovement : MonoBehaviour
             if (isFrozenForGive)
             {
                 string[] options = { "?", "怎麼了？", "有事嗎" };
-                int index = Random.Range(0, options.Length); // 隨機取得 0,1,2
+                int index = Random.Range(0, options.Length);
                 ShowBubble(options[index]);
-                //bubble.SetText(options[index]);
             }
             else
             {
                 ShowBubble(msg);
             }
-
         }
     }
     private string GetRandomMessage()
