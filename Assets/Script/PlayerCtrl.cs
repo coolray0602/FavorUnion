@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 
 public class PlayerCtrl : MonoBehaviour
 {
+    public TextMeshProUGUI debugtxt;
     public LayerMask hitMask;
     public GameObject punchEffectPrefab;
     public AudioClip carEnterClip;
@@ -61,6 +62,8 @@ public class PlayerCtrl : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI hitButtonText;
 
+
+
     [Header("Player Bubble")]
     public string[] playerReplyMessages;
     public GameObject playerSpeechBubblePrefab;
@@ -90,7 +93,7 @@ public class PlayerCtrl : MonoBehaviour
         // 在真正裝置上正常判斷
         isMobile = Application.isMobilePlatform;
 
-       // isMobile = true; // 🔥 強制開啟手機模式，方便測試
+        isMobile = true; // 🔥 強制開啟手機模式，方便測試
 
         Debug.Log("isMobile: " + isMobile);
         rb = GetComponent<Rigidbody>();
@@ -280,6 +283,7 @@ public class PlayerCtrl : MonoBehaviour
         }
         else if (joystick != null)
         {
+            debugtxt.text="joystickH= "+joystick.Horizontal+" , joystickV= "+joystick.Vertical;
             inputH = joystick.Horizontal;
             float joyV = joystick.Vertical;
             inputV = joyV >= 0 ? joyV : joyV * 0.5f;
@@ -321,6 +325,8 @@ public class PlayerCtrl : MonoBehaviour
 
     void HandleTouchLook()
     {
+
+        Debug.Log("Handling touch look with " + Input.touchCount + " touches.");
         for (int i = 0; i < Input.touchCount; i++)
         {
             Touch t = Input.GetTouch(i);
