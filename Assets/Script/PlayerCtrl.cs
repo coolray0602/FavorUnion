@@ -186,7 +186,13 @@ public class PlayerCtrl : MonoBehaviour
     {
 
         if (Input.GetKeyDown(KeyCode.Escape))
-            ShowCursor();
+        {
+            if(Cursor.visible)
+                HideCursor();
+            else
+                ShowCursor();
+        }
+            
         if (!GameManager.Instance.isGameOver)
         {
             if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(2))
@@ -985,6 +991,13 @@ public class PlayerCtrl : MonoBehaviour
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+    }
+    public void HideCursor()
+    {
+        if (isMobile)
+            return;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void CheckHitEnemy()

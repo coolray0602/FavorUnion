@@ -15,6 +15,12 @@ public class GameManager : MonoBehaviour
     public GameObject panel;               // 黑色半透明 Panel
     public Button newStartButton;           // 重新開始按鈕
     public Button continueButton;          // 繼續遊戲按鈕
+    public TMP_Text fpsText;              // FPS 顯示
+    
+    [Header("效能設定")]
+    public bool showFPS = true;           // 是否顯示 FPS
+    public float fpsUpdateInterval = 0.5f; // FPS 更新間隔（秒）
+    
     [Header("Camera")]
     public Transform cameraTransform;
     public Transform cameraTarget; // 玩家背後的位置
@@ -58,6 +64,7 @@ public class GameManager : MonoBehaviour
     private float timer = 0f;
     public bool isDay = true;
     public bool monsterExist = false;
+    
     // =======================
     // 太陽與月亮
     // =======================
@@ -93,6 +100,7 @@ public class GameManager : MonoBehaviour
     public string[] noonPostMessages = { "上班囉", "努力工作", "加油" };
     public string[] eveningMessages = { "吃飯囉", "肚子餓了" };
     public string[] nightMessages = { "下班囉", "又是充實的一天", "回家休息" };
+    
     // =======================
     // Ghost 設定
     // =======================
@@ -101,6 +109,7 @@ public class GameManager : MonoBehaviour
 
     // 用來記錄目前場上的 ghosts
     private List<GameObject> activeGhosts = new List<GameObject>();
+    
     // =======================
     // Game Over UI
     // =======================
@@ -151,6 +160,20 @@ public class GameManager : MonoBehaviour
 
     private GameObject player;
     private PlayerCtrl playerCtrl;
+    
+    // =======================
+    // 效能優化相關變數
+    // =======================
+    private float fpsTimer = 0f;
+    private int frameCount = 0;
+    private float currentFPS = 0f;
+    private float lastTimeUpdateTime = 0f;
+    private const float TIME_UPDATE_INTERVAL = 0.1f; // 時間更新間隔
+    
+    // 對象池（可選）
+    private Dictionary<GameObject, Queue<GameObject>> employeePools = new Dictionary<GameObject, Queue<GameObject>>();
+    private int maxEmployeeCount = 50; // 最大員工數量限制
+    
     // =======================
     // 初始化
     // =======================
@@ -176,6 +199,10 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
             playerCtrl = player.GetComponent<PlayerCtrl>();
+            
+        // 效能設定
+        Application.targetFrameRate = 30; // 手機上限制幀率
+        Time.fixedDeltaTime = 0.0333f; // 30 FPS 的物理更新間隔
     }
 
     private void Start()
@@ -211,6 +238,10 @@ public class GameManager : MonoBehaviour
         if (moonQuad != null)
             moonQuad.SetActive(false);
 
+        // 初始化 FPS 顯示
+        if (fpsText != null)
+            fpsText.gameObject.SetActive(showFPS);
+
         StartCoroutine(TimeRoutine());
         StartCoroutine(SpawnCycleRoutine());
         if (isDay)
@@ -218,55 +249,24 @@ public class GameManager : MonoBehaviour
         else
             PlayRandomBGM(nightMusics);
     }
-    public void SetFullscreen()
+    
+    private void Update()
     {
-        Screen.fullScreen = !Screen.fullScreen;
-    }
-    public void OnClickStartGame()
-    {
-        if (hasStarted) return;
-
-        hasStarted = true;
-        HideCursor();
-        StartCoroutine(StartGameSequence());
-
-    }
-
-    IEnumerator StartGameSequence()
-    {
-        float time = 0f;
-
-        while (time < moveDuration)
+        // FPS 計算
+        if (showFPS && fpsText != null)
         {
-            time += Time.deltaTime;
-            float t = time / moveDuration;
-
-            // ⭐ 漸慢（Ease Out）
-            t = 1 - Mathf.Pow(1 - t, 3);
-
-            // 🎥 Camera 移動
-            cameraTransform.position = Vector3.Lerp(camStartPos, cameraTarget.position, t);
-            cameraTransform.rotation = Quaternion.Lerp(camStartRot, cameraTarget.rotation, t);
-
-            // 🎨 UI 淡出
-            menuPanel.alpha = 1 - t;
-
-            yield return null;
+            frameCount++;
+            fpsTimer += Time.unscaledDeltaTime;
+            
+            if (fpsTimer >= fpsUpdateInterval)
+            {
+                currentFPS = frameCount / fpsTimer;
+                UpdateFPSDisplay();
+                frameCount = 0;
+                fpsTimer = 0f;
+            }
         }
-
-        // 保險：最終狀態
-        cameraTransform.position = cameraTarget.position;
-        cameraTransform.rotation = cameraTarget.rotation;
-        menuPanel.alpha = 0;
-        menuPanel.gameObject.SetActive(false);
-
-        // 🎮 開始遊戲
-        playerController.enabled = true;
-        controlUI.SetActive(true);
-    }
-    bool hasStarted = false;
-    void Update()
-    {
+        
         if (!isEnding)
         {
             playTime += Time.deltaTime;
@@ -296,6 +296,31 @@ public class GameManager : MonoBehaviour
             StartCoroutine(StartGameSequence());
         }
     }
+    
+    // 更新 FPS 顯示
+    private void UpdateFPSDisplay()
+    {
+        if (fpsText == null) return;
+        
+        string colorCode = GetFPSColorCode(currentFPS);
+        fpsText.text = $"<color={colorCode}>FPS: {Mathf.RoundToInt(currentFPS)}</color>";
+    }
+    
+    // 根據 FPS 返回顏色
+    private string GetFPSColorCode(float fps)
+    {
+        if (fps >= 25) return "#00FF00";  // 綠色 - 流暢
+        if (fps >= 15) return "#FFFF00";  // 黃色 - 可接受
+        return "#FF0000";                  // 紅色 - 卡頓
+    }
+    
+    public void SetShowFPS(bool show)
+    {
+        showFPS = show;
+        if (fpsText != null)
+            fpsText.gameObject.SetActive(show);
+    }
+    
     public string GetPlayTimeString()
     {
         int totalSeconds = Mathf.FloorToInt(playTime);
@@ -306,6 +331,7 @@ public class GameManager : MonoBehaviour
 
         return $"{hours:00}:{minutes:00}:{seconds:00}";
     }
+    
     // =======================
     // 睡覺
     // =======================
@@ -378,6 +404,7 @@ public class GameManager : MonoBehaviour
             pair.Key.ResetState();
         }
     }
+    
     // 呼叫此函數啟動過關畫面
     public void ShowEnding()
     {
@@ -451,7 +478,7 @@ UI/UX 設計：	Ray Liu
     }
 
     // =======================
-    // 日夜循環
+    // 日夜循環（優化版）
     // =======================
     IEnumerator TimeRoutine()
     {
@@ -459,117 +486,126 @@ UI/UX 設計：	Ray Liu
         {
             if (GameManager.Instance.onEnding)
             {
-                yield return null; // 過關畫面中暫停時間循環
+                yield return null;
                 continue;
             }
+            
             timer += Time.deltaTime;
-
-            if (isDay)
+            
+            // 降低更新頻率
+            if (Time.time - lastTimeUpdateTime >= TIME_UPDATE_INTERVAL)
             {
-                float morningEnd = dayDuration / 6f;
-                float eveningStart = dayDuration * 5f / 6f;
-
-                if (timer < morningEnd)
-                    sunLight.color = Color.Lerp(dawnColor, dayColor, timer / morningEnd);
-                else if (timer > eveningStart)
-                    sunLight.color = Color.Lerp(dayColor, duskColor, (timer - eveningStart) / (dayDuration / 6f));
-                else
-                    sunLight.color = dayColor;
-
-                float sunAngle = Mathf.Lerp(0f, 180f, timer / dayDuration);
-                sunLight.transform.rotation = Quaternion.Euler(sunAngle, 0, 0);
-
-                if (moonQuad != null)
-                    moonQuad.SetActive(false);
-
-                if (timer >= dayDuration)
-                {
-                    timer = 0f;
-                    isDay = false;
-                    PlayRandomBGM(nightMusics);   // 🌙 切夜晚音樂
-                    SpawnGhosts();   // 🌙 晚上生成 Ghost
-                }
+                lastTimeUpdateTime = Time.time;
+                UpdateTimeBasedLogic();
             }
-            else
-            {
-                sunLight.transform.rotation = Quaternion.Euler(-90f, 0, 0);
-                sunLight.color = nightColor;
-
-                float moonAngle = Mathf.Lerp(0f, 180f, timer / nightDuration);
-
-                if (moonQuad != null)
-                {
-                    moonQuad.SetActive(true);
-                    Vector3 moonPos = new Vector3(
-                        0,
-                        Mathf.Sin(Mathf.Deg2Rad * moonAngle) * moonDistance,
-                        Mathf.Cos(Mathf.Deg2Rad * moonAngle) * moonDistance
-                    );
-                    moonQuad.transform.position = moonPos;
-                    if (Camera.main != null)
-                        moonQuad.transform.LookAt(Camera.main.transform);
-                }
-
-                if (timer >= nightDuration)
-                {
-                    timer = 0f;
-                    isDay = true;
-                    PlayRandomBGM(dayMusics);   // ☀️ 切白天音樂
-                    currentDay++;   // ⭐ 新的一天
-                    ClearGhosts();   // ☀️ 天亮移除 Ghost
-                }
-            }
-
-            // =======================
-            // Timed Spawn 功能
-            // =======================
-            foreach (var setting in timedSpawns)
-            {
-                if (setting.spawned) continue;
-                // ⭐ 根據心圓會狀態決定生成時間
-                bool isXinYuanTime = PlayerPrefs.GetInt("xinyuanReady", 0) == 2;
-                bool isCorrectTime = (!isXinYuanTime && timer >= setting.spawnTime) || (isXinYuanTime && timer >= setting.spawnTimeOnXinYuan);
-
-                if (isCorrectTime)
-                {
-                    GameObject obj = Instantiate(
-                        setting.prefab,
-                        setting.spawnPoint.position,
-                        setting.spawnPoint.rotation
-                    );
-
-                    obj.name = setting.spawnName;
-
-                    // ⭐ 指定巡邏目的地給 NPCMovement
-                    NPCMovement movement = obj.GetComponent<NPCMovement>();
-                    if (movement != null)
-                    {
-                        if (isXinYuanTime)
-                        {
-
-                            movement.InitXinyuan(setting.xinyuanPoint);
-                        }
-                        else
-                        {
-                            movement.InitPatrol(setting.patrolPoints);
-                        }
-
-                        movement.exitPoint = setting.exitPoint;
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"{obj.name} 沒有 NPCMovement 元件，無法設定巡邏點");
-                    }
-                    setting.spawned = true;
-                }
-            }
-
+            
             yield return null;
         }
     }
+    
+    private void UpdateTimeBasedLogic()
+    {
+        if (isDay)
+        {
+            float morningEnd = dayDuration / 6f;
+            float eveningStart = dayDuration * 5f / 6f;
+
+            if (timer < morningEnd)
+                sunLight.color = Color.Lerp(dawnColor, dayColor, timer / morningEnd);
+            else if (timer > eveningStart)
+                sunLight.color = Color.Lerp(dayColor, duskColor, (timer - eveningStart) / (dayDuration / 6f));
+            else
+                sunLight.color = dayColor;
+
+            float sunAngle = Mathf.Lerp(0f, 180f, timer / dayDuration);
+            sunLight.transform.rotation = Quaternion.Euler(sunAngle, 0, 0);
+
+            if (moonQuad != null)
+                moonQuad.SetActive(false);
+
+            if (timer >= dayDuration)
+            {
+                timer = 0f;
+                isDay = false;
+                PlayRandomBGM(nightMusics);
+                SpawnGhosts();
+            }
+        }
+        else
+        {
+            sunLight.transform.rotation = Quaternion.Euler(-90f, 0, 0);
+            sunLight.color = nightColor;
+
+            float moonAngle = Mathf.Lerp(0f, 180f, timer / nightDuration);
+
+            if (moonQuad != null)
+            {
+                moonQuad.SetActive(true);
+                Vector3 moonPos = new Vector3(
+                    0,
+                    Mathf.Sin(Mathf.Deg2Rad * moonAngle) * moonDistance,
+                    Mathf.Cos(Mathf.Deg2Rad * moonAngle) * moonDistance
+                );
+                moonQuad.transform.position = moonPos;
+                if (Camera.main != null)
+                    moonQuad.transform.LookAt(Camera.main.transform);
+            }
+
+            if (timer >= nightDuration)
+            {
+                timer = 0f;
+                isDay = true;
+                PlayRandomBGM(dayMusics);
+                currentDay++;
+                ClearGhosts();
+            }
+        }
+        
+        // Timed Spawn 檢查
+        foreach (var setting in timedSpawns)
+        {
+            if (setting.spawned) continue;
+            
+            bool isXinYuanTime = PlayerPrefs.GetInt("xinyuanReady", 0) == 2;
+            bool isCorrectTime = (!isXinYuanTime && timer >= setting.spawnTime) || (isXinYuanTime && timer >= setting.spawnTimeOnXinYuan);
+
+            if (isCorrectTime)
+            {
+                SpawnTimedObject(setting);
+            }
+        }
+    }
+    
+    private void SpawnTimedObject(TimedSpawnSetting setting)
+    {
+        GameObject obj = Instantiate(
+            setting.prefab,
+            setting.spawnPoint.position,
+            setting.spawnPoint.rotation
+        );
+
+        obj.name = setting.spawnName;
+
+        NPCMovement movement = obj.GetComponent<NPCMovement>();
+        if (movement != null)
+        {
+            bool isXinYuanTime = PlayerPrefs.GetInt("xinyuanReady", 0) == 2;
+            if (isXinYuanTime)
+                movement.InitXinyuan(setting.xinyuanPoint);
+            else
+                movement.InitPatrol(setting.patrolPoints);
+
+            movement.exitPoint = setting.exitPoint;
+        }
+        else
+        {
+            Debug.LogWarning($"{obj.name} 沒有 NPCMovement 元件，無法設定巡邏點");
+        }
+        setting.spawned = true;
+    }
 
     // =======================
-    // 員工生成
+    // 員工生成（優化版）
     // =======================
     IEnumerator SpawnCycleRoutine()
     {
@@ -579,6 +615,7 @@ UI/UX 設計：	Ray Liu
         bool eveningDone = false;
         bool nightDone = false;
         int lastSpawnDay = currentDay;
+        
         while (true)
         {
             if (currentDay != lastSpawnDay)
@@ -590,7 +627,7 @@ UI/UX 設計：	Ray Liu
                 noonPostDone = false;
                 eveningDone = false;
                 nightDone = false;
-                if (PlayerPrefs.GetInt("xinyuanReady", 0) >= 3)  //心圓會已經舉辦且達到集合完成狀態了，雖未睡覺，但過了一夜，仍重置回未準備狀態
+                if (PlayerPrefs.GetInt("xinyuanReady", 0) >= 3)
                 {
                     PlayerPrefs.SetInt("xinyuanReady", 0);
                 }
@@ -606,7 +643,7 @@ UI/UX 設計：	Ray Liu
                 PlayerPrefs.SetInt("notNoon", 1);
                 PlayerPrefs.SetInt("lunchServed", 0);
                 morningDone = true;
-                StartCoroutine(SpawnPhase(new Transform[] { spawnPoint }, destinations, morningMessages, 10));
+                StartCoroutine(SpawnPhase(new Transform[] { spawnPoint }, destinations, morningMessages, 8)); // 減少數量
                 Debug.Log("早上開始了");
             }
 
@@ -614,7 +651,7 @@ UI/UX 設計：	Ray Liu
             {
                 PlayerPrefs.SetInt("notNoon", 0);
                 noonDone = true;
-                StartCoroutine(SpawnPhase(destinations, restaurants, noonMessages, 10));
+                StartCoroutine(SpawnPhase(destinations, restaurants, noonMessages, 8));
                 Debug.Log("中午開始了");
             }
 
@@ -622,7 +659,7 @@ UI/UX 設計：	Ray Liu
             {
                 PlayerPrefs.SetInt("notNoon", 1);
                 noonPostDone = true;
-                StartCoroutine(SpawnPhase(restaurants, destinations, noonPostMessages, 10));
+                StartCoroutine(SpawnPhase(restaurants, destinations, noonPostMessages, 8));
                 Debug.Log("中午結束了，下午開始了");
             }
 
@@ -630,8 +667,8 @@ UI/UX 設計：	Ray Liu
             {
                 PlayerPrefs.SetInt("notNoon", 1);
                 eveningDone = true;
-                StartCoroutine(SpawnPhase(destinations, restaurants, eveningMessages, 10));
-                StartCoroutine(SpawnPhase(new Transform[] { spawnPoint }, destinations, morningMessages, 10));
+                StartCoroutine(SpawnPhase(destinations, restaurants, eveningMessages, 8));
+                StartCoroutine(SpawnPhase(new Transform[] { spawnPoint }, destinations, morningMessages, 8));
                 Debug.Log("傍晚開始了，員工們開始下班了，但也有新的員工上班了");
             }
 
@@ -639,7 +676,7 @@ UI/UX 設計：	Ray Liu
             {
                 PlayerPrefs.SetInt("notNoon", 1);
                 nightDone = true;
-                StartCoroutine(SpawnPhase(destinations, new Transform[] { spawnPoint }, nightMessages, 10));
+                StartCoroutine(SpawnPhase(destinations, new Transform[] { spawnPoint }, nightMessages, 8));
                 Debug.Log("夜晚開始了");
             }
 
@@ -650,8 +687,9 @@ UI/UX 設計：	Ray Liu
     IEnumerator SpawnPhase(Transform[] origins, Transform[] targets, string[] messages, int targetCount)
     {
         int count = 0;
-
-        while (count < targetCount && !isGameOver)
+        int currentEmployeeCount = GameObject.FindGameObjectsWithTag("NPC").Length;
+        
+        while (count < targetCount && !isGameOver && currentEmployeeCount < maxEmployeeCount)
         {
             float waitTime = Random.Range(1f, spawnInterval);
             yield return new WaitForSeconds(waitTime);
@@ -659,8 +697,9 @@ UI/UX 設計：	Ray Liu
             Transform origin = origins[Random.Range(0, origins.Length)];
             Transform dest = targets[Random.Range(0, targets.Length)];
             SpawnEmployee(origin.position, dest.position, messages);
-
+            
             count++;
+            currentEmployeeCount++;
         }
     }
 
@@ -681,6 +720,18 @@ UI/UX 設計：	Ray Liu
         Animator anim = employee.GetComponent<Animator>();
         if (info != null && anim != null)
             anim.SetBool("isMale", info.isMale);
+            
+        // 自動銷毀避免累積
+        StartCoroutine(AutoDestroyEmployee(employee, 120f));
+    }
+    
+    IEnumerator AutoDestroyEmployee(GameObject employee, float maxLifeTime)
+    {
+        yield return new WaitForSeconds(maxLifeTime);
+        if (employee != null)
+        {
+            Destroy(employee);
+        }
     }
 
     // =======================
@@ -737,6 +788,7 @@ UI/UX 設計：	Ray Liu
             (list[i], list[rand]) = (list[rand], list[i]);
         }
     }
+    
     void SpawnGhosts()
     {
         if (ghostPrefab == null || destinations == null || destinations.Length == 0 || playerController.enabled == false)
@@ -755,6 +807,7 @@ UI/UX 設計：	Ray Liu
             activeGhosts.Add(ghost);
         }
     }
+    
     public void ClearGhosts()
     {
         foreach (GameObject ghost in activeGhosts)
@@ -765,6 +818,7 @@ UI/UX 設計：	Ray Liu
 
         activeGhosts.Clear();
     }
+    
     void ClearMonsters()
     {
         GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
@@ -797,6 +851,7 @@ UI/UX 設計：	Ray Liu
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    
     public void ContinueGame()
     {
         onEnding = false;
@@ -805,12 +860,12 @@ UI/UX 設計：	Ray Liu
             panel.SetActive(false);
         if (endingText != null)
             endingText.gameObject.SetActive(false);
-        //結束過關音樂，根據當前是白天還是夜晚切回對應的 BGM
         if (isDay)
             PlayRandomBGM(dayMusics);
         else
             PlayRandomBGM(nightMusics);
     }
+    
     // =======================
     // 清空世界（睡醒 / 昏倒用）
     // =======================
@@ -818,42 +873,36 @@ UI/UX 設計：	Ray Liu
     {
         Debug.Log("Resetting world for new day...");
 
-        if (!isDay) // 如果是從夜晚睡到白天，才重置心圓會狀態，從白天睡到夜晚則不受影響
+        if (!isDay)
         {
             if (PlayerPrefs.GetInt("xinyuanReady", 0) == 1)
             {
                 PlayerPrefs.SetInt("xinyuanReady", 2);
                 PlayerPrefs.SetInt("xinyuanGroup", 0);
             }
-            else if (PlayerPrefs.GetInt("xinyuanReady", 0) >= 2)   //已經舉辦過一次心圓會了，重置回未準備狀態
+            else if (PlayerPrefs.GetInt("xinyuanReady", 0) >= 2)
             {
                 PlayerPrefs.SetInt("xinyuanReady", 0);
             }
             PlayerPrefs.SetInt("rayDanced", 0);
 
-            // 2️⃣ 清空所有 NPC（Timed Spawn）
             foreach (GameObject npc in GameObject.FindGameObjectsWithTag("NPC"))
             {
                 if (npc.GetComponent<NPCMovement>() != null && npc.GetComponent<NPCMovement>().stayPut)
-                    continue;   // 如果 NPC 有設定 stayPut 就不刪除
+                    continue;
                 Destroy(npc);
             }
         }
-        // 3️⃣ 清空 Ghost
+        
         ClearGhosts();
         ClearMonsters();
         playerCtrl.fainted = false;
 
-        // ⭐ 移除原本的 timer = 0f, isDay = true, currentDay++ 設定
-        // 這些改由 SleepRoutine 根據睡覺時間來控制
-
-        // 5️⃣ 重置 Timed Spawn 狀態
         foreach (var setting in timedSpawns)
         {
             setting.spawned = false;
         }
 
-        // 清除並重生所有Animal
         GameObject[] animals = GameObject.FindGameObjectsWithTag("Animal");
         foreach (GameObject animal in animals)
         {
@@ -863,7 +912,9 @@ UI/UX 設計：	Ray Liu
         {
             Instantiate(animalPrefab, animalSpawnPoint.position, animalSpawnPoint.rotation);
         }
-    }    // =======================
+    }
+    
+    // =======================
     // 日夜階段判斷（保留給員工使用）
     // =======================
     public bool IsMorningEnd() { return isDay && timer >= dayDuration / 6f; }
@@ -874,7 +925,6 @@ UI/UX 設計：	Ray Liu
 
     IEnumerator FadeBGM(AudioClip[] clips)
     {
-        // 淡出
         float t = 0;
         float startVolume = bgmSource.volume;
 
@@ -885,12 +935,10 @@ UI/UX 設計：	Ray Liu
             yield return null;
         }
 
-        // 換音樂
         int index = Random.Range(0, clips.Length);
         bgmSource.clip = clips[index];
         bgmSource.Play();
 
-        // 淡入
         t = 0;
         while (t < 1f)
         {
@@ -903,34 +951,36 @@ UI/UX 設計：	Ray Liu
     void PlayRandomBGM(AudioClip[] clips)
     {
         if (bgmSource == null || clips.Length == 0) return;
-
         StartCoroutine(FadeBGM(clips));
     }
+    
     public void PlayHitSound()
     {
-        if (hitClip != null)
+        if (hitClip != null && player != null)
         {
             AudioSource.PlayClipAtPoint(hitClip, player.transform.position);
         }
     }
+    
     public void PlayDamagedSound()
     {
-        if (damagedClip != null)
+        if (damagedClip != null && player != null)
         {
             AudioSource.PlayClipAtPoint(damagedClip, player.transform.position);
         }
     }
+    
     public string GetCurrentTimeString()
     {
         if (isDay)
         {
-            float hours = Mathf.Floor(timer / dayDuration * 12f) + 6; // 白天從 6 點開始
+            float hours = Mathf.Floor(timer / dayDuration * 12f) + 6;
             int displayHours = (int)(hours % 24);
             return $"{displayHours}點";
         }
         else
         {
-            float hours = Mathf.Floor(timer / nightDuration * 12f) + 18; // 夜晚從 18 點開始
+            float hours = Mathf.Floor(timer / nightDuration * 12f) + 18;
             int displayHours = (int)(hours % 24);
             if (displayHours == 0) displayHours = 24;
             return $"{displayHours}點";
@@ -939,9 +989,49 @@ UI/UX 設計：	Ray Liu
 
     public void HideCursor()
     {
-        if (playerCtrl.IsMobile())
+        if (playerCtrl != null && playerCtrl.IsMobile())
             return;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+    
+    bool hasStarted = false;
+    public void SetFullscreen()
+    {
+        Screen.fullScreen = !Screen.fullScreen;
+    }
+    
+    public void OnClickStartGame()
+    {
+        if (hasStarted) return;
+        hasStarted = true;
+        HideCursor();
+        StartCoroutine(StartGameSequence());
+    }
+
+    IEnumerator StartGameSequence()
+    {
+        float time = 0f;
+
+        while (time < moveDuration)
+        {
+            time += Time.deltaTime;
+            float t = time / moveDuration;
+            t = 1 - Mathf.Pow(1 - t, 3);
+
+            cameraTransform.position = Vector3.Lerp(camStartPos, cameraTarget.position, t);
+            cameraTransform.rotation = Quaternion.Lerp(camStartRot, cameraTarget.rotation, t);
+            menuPanel.alpha = 1 - t;
+
+            yield return null;
+        }
+
+        cameraTransform.position = cameraTarget.position;
+        cameraTransform.rotation = cameraTarget.rotation;
+        menuPanel.alpha = 0;
+        menuPanel.gameObject.SetActive(false);
+
+        playerController.enabled = true;
+        controlUI.SetActive(true);
     }
 }
