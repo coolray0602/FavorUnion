@@ -110,6 +110,9 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.onEnding)
+            return;
+
         checkTimer -= Time.deltaTime;
 
         if (checkTimer <= 0f)
@@ -119,12 +122,7 @@ public class PlayerCtrl : MonoBehaviour
             cachedNearbyCar = FindNearbyCar();
             checkTimer = 0.1f; // ⭐ 每0.1秒檢查一次
         }
-        if (GameManager.Instance.onEnding)
-        {
-            // 過關畫面中不處理玩家控制並顯示滑鼠游標
-            ShowCursor();
-            return;
-        }
+
         isGround = Physics.Raycast(groundCheck.position, Vector3.down, groundCheckDistance);
 
         HandleKeyEvent();
@@ -141,6 +139,8 @@ public class PlayerCtrl : MonoBehaviour
 
     void LateUpdate()
     {
+        if (GameManager.Instance.onEnding)
+            return;
         if (!isInCar)
         {
             HandleRotation();
@@ -162,31 +162,9 @@ public class PlayerCtrl : MonoBehaviour
 
             if (rx != 0f)
             {
-                /*
-                if (Mathf.Abs(lastEulerAngle - transform.eulerAngles.y) > 0.01f)
-                {
-                    Debug.Log($"******旋轉時Euler Y changed,from {lastEulerAngle} to {transform.eulerAngles.y}");
-                }
-                else
-                {
-                    Debug.Log($"correct: {transform.eulerAngles.y}");
-                }*/
-
                 transform.eulerAngles += new Vector3(0, rx, 0);
                 lastEulerAngle = transform.eulerAngles.y;
             }
-            /*
-            else
-            {
-                if (Mathf.Abs(lastEulerAngle - transform.eulerAngles.y) > 0.01f)
-                {
-                    Debug.Log($"******沒有在旋轉 Euler Y changed,from {lastEulerAngle} to {transform.eulerAngles.y}");
-                    // 打印调用堆栈（最重要！）
-                    UnityEngine.Debug.LogWarning($"调用堆栈:\n{StackTraceUtility.ExtractStackTrace()}");
-                    transform.eulerAngles = new Vector3(transform.eulerAngles.x, lastEulerAngle, transform.eulerAngles.z);
-                }
-            }*/
-
             pitch -= ry;
             pitch = Mathf.Clamp(pitch, -40f, 40f);
             eye.transform.localEulerAngles = new Vector3(pitch, 0, 0);
@@ -198,6 +176,8 @@ public class PlayerCtrl : MonoBehaviour
     }
     void FixedUpdate()
     {
+                if (GameManager.Instance.onEnding)
+            return;
         if (!isInCar)
             HandleMovementPhysics();
     }
@@ -1012,7 +992,6 @@ public class PlayerCtrl : MonoBehaviour
         Vector3 center = transform.position + transform.forward * 0.5f + Vector3.up * 0.5f;
 
         int count = Physics.OverlapSphereNonAlloc(center, 0.4f, enemyResults);
-
         for (int i = 0; i < count; i++)
         {
             Collider col = enemyResults[i];
@@ -1110,7 +1089,7 @@ public class PlayerCtrl : MonoBehaviour
         GameObject frontInfo = GetFrontInfo(3f, 45f);
 
         // 1️⃣ 睡覺（高優先）
-        if (currentSleepArea != null && canAct && !isInCar)// && GameManager.Instance.CanSleepNow()) //暫時不限制晚上才能睡
+        if (currentSleepArea != null && canAct && !isInCar)
             return PlayerAction.Sleep;
 
         // 1.5️⃣ 跳舞

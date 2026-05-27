@@ -328,13 +328,38 @@ public class GameManager : MonoBehaviour
         playerCtrl.resetStatus();
         playerCtrl.isLanding = true;
         playerCtrl.animator.SetTrigger("wakeup");
+
+        // ⭐ 記錄睡覺前的時間狀態
+        bool sleptDuringDay = isDay;
+
+        // ⭐ 重置世界（清除 NPC、鬼魂、動物等，但不影響時間狀態）
         ResetWorldForNewDay();
+
+        // ⭐ 重置計時器
+        timer = 0f;
 
         yield return new WaitForSeconds(3f);
 
         if (sleepUI != null)
             sleepUI.SetActive(false);
-        PlayRandomBGM(dayMusics);   // ☀️ 切白天音樂
+
+        // ⭐ 根據睡覺時間決定醒來後的時間和音樂
+        if (sleptDuringDay)
+        {
+            // 白天睡覺 → 睡到晚上
+            isDay = false;
+            PlayRandomBGM(nightMusics);   // 🌙 切夜晚音樂
+            SpawnGhosts();                 // 生成鬼魂
+            playerCtrl.ShowBubble("怎麼天黑了...");
+        }
+        else
+        {
+            // 夜晚睡覺 → 睡到隔天早上
+            isDay = true;
+            currentDay++;                  // 新的一天
+            PlayRandomBGM(dayMusics);      // ☀️ 切白天音樂
+            playerCtrl.ShowBubble("新的一天開始了！");
+        }
 
         if (player != null)
             player.transform.position = pos;
@@ -342,10 +367,6 @@ public class GameManager : MonoBehaviour
         if (fainted)
         {
             playerCtrl.ShowBubble("我怎麼會昏倒了...?");
-        }
-        else
-        {
-            playerCtrl.ShowBubble("新的一天開始了！");
         }
 
         // 重置車輛狀態
@@ -360,6 +381,8 @@ public class GameManager : MonoBehaviour
     // 呼叫此函數啟動過關畫面
     public void ShowEnding()
     {
+        isEnding = true;
+        onEnding = true;
         if (endingText == null || panel == null || newStartButton == null || continueButton == null)
             return;
 
@@ -422,12 +445,10 @@ UI/UX 設計：	Ray Liu
         float textHeight = endingText.rect.height;
         targetY = textHeight - panelHeight; // 文字上滑到下緣對齊 Panel 下緣
 
-        isEnding = true;
-        onEnding = true;
+
         PlayRandomBGM(new AudioClip[] { endingMusic }); // 播放過關音樂
 
     }
-    public bool CanSleepNow() => !isDay;
 
     // =======================
     // 日夜循環
@@ -751,6 +772,7 @@ UI/UX 設計：	Ray Liu
         {
             Destroy(monster);
         }
+        monsterExist = false;
     }
 
     // =======================
@@ -796,33 +818,34 @@ UI/UX 設計：	Ray Liu
     {
         Debug.Log("Resetting world for new day...");
 
-        if (PlayerPrefs.GetInt("xinyuanReady", 0) == 1)
+        if (!isDay) // 如果是從夜晚睡到白天，才重置心圓會狀態，從白天睡到夜晚則不受影響
         {
-            PlayerPrefs.SetInt("xinyuanReady", 2);
-            PlayerPrefs.SetInt("xinyuanGroup", 0);
-        }
-        else if (PlayerPrefs.GetInt("xinyuanReady", 0) >= 2)   //已經舉辦過一次心圓會了，重置回未準備狀態
-        {
-            PlayerPrefs.SetInt("xinyuanReady", 0);
-        }
-        PlayerPrefs.SetInt("rayDanced", 0);
-        // 2️⃣ 清空所有 NPC（Timed Spawn）
-        foreach (GameObject npc in GameObject.FindGameObjectsWithTag("NPC"))
-        {
-            if (npc.GetComponent<NPCMovement>() != null && npc.GetComponent<NPCMovement>().stayPut)
-                continue;   // 如果 NPC 有設定 stayPut 就不刪除
-            Destroy(npc);
-        }
+            if (PlayerPrefs.GetInt("xinyuanReady", 0) == 1)
+            {
+                PlayerPrefs.SetInt("xinyuanReady", 2);
+                PlayerPrefs.SetInt("xinyuanGroup", 0);
+            }
+            else if (PlayerPrefs.GetInt("xinyuanReady", 0) >= 2)   //已經舉辦過一次心圓會了，重置回未準備狀態
+            {
+                PlayerPrefs.SetInt("xinyuanReady", 0);
+            }
+            PlayerPrefs.SetInt("rayDanced", 0);
 
+            // 2️⃣ 清空所有 NPC（Timed Spawn）
+            foreach (GameObject npc in GameObject.FindGameObjectsWithTag("NPC"))
+            {
+                if (npc.GetComponent<NPCMovement>() != null && npc.GetComponent<NPCMovement>().stayPut)
+                    continue;   // 如果 NPC 有設定 stayPut 就不刪除
+                Destroy(npc);
+            }
+        }
         // 3️⃣ 清空 Ghost
         ClearGhosts();
         ClearMonsters();
         playerCtrl.fainted = false;
 
-        timer = 0f;
-        isDay = true;
-
-        currentDay++;
+        // ⭐ 移除原本的 timer = 0f, isDay = true, currentDay++ 設定
+        // 這些改由 SleepRoutine 根據睡覺時間來控制
 
         // 5️⃣ 重置 Timed Spawn 狀態
         foreach (var setting in timedSpawns)
@@ -840,9 +863,7 @@ UI/UX 設計：	Ray Liu
         {
             Instantiate(animalPrefab, animalSpawnPoint.position, animalSpawnPoint.rotation);
         }
-
-    }
-    // =======================
+    }    // =======================
     // 日夜階段判斷（保留給員工使用）
     // =======================
     public bool IsMorningEnd() { return isDay && timer >= dayDuration / 6f; }
@@ -916,9 +937,9 @@ UI/UX 設計：	Ray Liu
         }
     }
 
-        public void HideCursor()
+    public void HideCursor()
     {
-        if(playerCtrl.IsMobile())
+        if (playerCtrl.IsMobile())
             return;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

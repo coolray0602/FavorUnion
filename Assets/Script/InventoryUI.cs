@@ -15,9 +15,12 @@ public class InventoryUI : MonoBehaviour
 
     [Header("Buttons")]
     public Button holdButton;
+    public Button sleepButton;
 
     [Header("Player Attach Points")]
     public Transform playerRightHand;
+
+    public Transform wakeupPosition; // 用於睡覺後的醒來位置
 
     // ⭐ 新增：通知 PlayerCtrl 更新 heldObject
     public System.Action<GameObject> onItemHeld;
@@ -65,6 +68,10 @@ public class InventoryUI : MonoBehaviour
             holdButton.onClick.AddListener(OnHoldClicked);
         else
             Debug.LogError("holdButton 沒有指派！");
+        if (sleepButton != null)
+            sleepButton.onClick.AddListener(OnSleepClicked);
+        else
+            Debug.LogError("sleepButton 沒有指派！");
     }
 
     // =========================================================
@@ -120,6 +127,11 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    private void OnSleepClicked()
+    {
+        ToggleInventory();
+        GameManager.Instance.SleepToMorning(wakeupPosition.position, false); // 傳入玩家位置，讓 GameManager 可以在適當位置生成睡覺效果
+    }
 
     // =========================================================
     // 開關背包
