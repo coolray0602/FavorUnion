@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>公司大冒險 by Ray</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    
+    <style>
+        /* 全局樣式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', 'Poppins', 'Microsoft JhengHei', system-ui, -apple-system, 'Roboto', sans-serif;
+        }
+
+        /* Unity 容器 */
+        #unity-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #0a0f1e;
+        }
+
+        #unity-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            outline: none;
+        }
+
+        /* 自定義載入畫面覆蓋層 - 深色漸層背景 */
+        .custom-loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1a2a3a, #0a0f1a);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* 遊戲標題區塊 */
+        .game-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .game-title h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #FFD966, #FF8C42);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        .game-title p {
+            color: #ccddee;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            opacity: 0.9;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* 載入進度卡片 */
+        .loader-card {
+            background: rgba(10, 20, 30, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 1.8rem 2.5rem;
+            width: 460px;
+            max-width: 85vw;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,215,100,0.2);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 背景圖片區域 - 放在進度條上方 */
+        .loading-image {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .loading-image img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* 檔案資訊面板 */
+        .file-info {
+            background: rgba(0,0,0,0.4);
+            border-radius: 32px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            color: #eef4ff;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .info-item {
+            background: rgba(255,255,255,0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #FFE5A3;
+        }
+
+        /* 進度條樣式 */
+        .progress-container {
+            margin: 0.5rem 0 0.8rem;
+            width: 100%;
+        }
+
+        .progress-bar-bg {
+            background: rgba(0,0,0,0.5);
+            border-radius: 30px;
+            height: 18px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #FFB347, #FF8C00, #FFD966);
+            border-radius: 30px;
+            transition: width 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 0 6px #ffae42;
+        }
+
+        .progress-percent {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            font-family: monospace;
+            letter-spacing: 1px;
+            color: #FFE0A3;
+            text-shadow: 0 0 3px #ff8c00;
+        }
+
+        /* 載入提示動畫 */
+        .loading-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #aaccee;
+        }
+
+        .dot-flashing {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #FFB347;
+            box-shadow: 12px 0 0 #FFB347, -12px 0 0 #FFB347;
+            animation: dotPulse 1s infinite ease-in-out;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8);}
+            50% { opacity: 1; transform: scale(1.2);}
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 隱藏 Unity 預設載入條 */
+        #unity-loading-bar {
+            display: none !important;
+        }
+
+        /* 警告區塊 */
+        #unity-warning {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            z-index: 200;
+            text-align: center;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 550px) {
+            .loader-card { padding: 1.2rem 1.5rem; width: 90%; }
+            .info-value { font-size: 0.9rem; }
+            .progress-percent { font-size: 1.1rem; }
+            .game-title h1 { font-size: 1.8rem; }
+            .loading-image img { max-width: 90%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="unity-container">
+        <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+        <div id="unity-warning"></div>
+    </div>
+
+    <!-- 自定義載入覆蓋層 -->
+    <div id="customLoader" class="custom-loader-overlay">
+        <div class="game-title">
+            <h1>⚡ Ray公司大冒險 ⚡</h1>
+            <p>奇幻冒險 · 即刻展開</p>
+        </div>
+        <div class="loader-card">
+            <!-- bg.png 圖片放在進度條上方 -->
+            <div class="loading-image">
+                <img src="bg.png" alt="Loading" width="400" height="133">
+            </div>
+            <div class="file-info">
+                <div class="info-item">
+                    <span class="info-label">📦 目標總大小</span>
+                    <span class="info-value" id="totalSizeLabel">-- MB</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">⬇️ 已下載</span>
+                    <span class="info-value" id="downloadedLabel">0.00 MB</span>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-percent" id="percentLabel">0%</div>
+            </div>
+            <div class="loading-hint">
+                <span>載入資源中</span>
+                <span class="dot-flashing"></span>
+                <span id="speedHint"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // DOM 元素
+            const totalSizeSpan = document.getElementById('totalSizeLabel');
+            const downloadedSpan = document.getElementById('downloadedLabel');
+            const progressFillDiv = document.getElementById('progressFill');
+            const percentLabelSpan = document.getElementById('percentLabel');
+            const speedHintSpan = document.getElementById('speedHint');
+            const canvas = document.getElementById('unity-canvas');
+            const warningBanner = document.getElementById('unity-warning');
+
+            // 資源大小變數
+            let totalBytes = 0;
+            let sizeFetched = false;
+            let unityLoadProgress = 0;
+            let speedBytesPerSec = 0;
+            let lastProgressValue = 0;
+            let lastProgressTime = performance.now();
+
+            function formatMB(bytes) {
+                if (!bytes && bytes !== 0) return "-- MB";
+                return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+            }
+
+            function updateDownloadUI() {
+                if (!sizeFetched || totalBytes === 0) {
+                    if (unityLoadProgress > 0) {
+                        const percent = Math.round(unityLoadProgress * 100);
+                        percentLabelSpan.innerText = percent + "%";
+                        progressFillDiv.style.width = percent + "%";
+                    }
+                    return;
+                }
+                const downloadedBytes = totalBytes * unityLoadProgress;
+                const percent = (unityLoadProgress * 100).toFixed(1);
+                percentLabelSpan.innerText = `${percent}%`;
+                progressFillDiv.style.width = `${percent}%`;
+                downloadedSpan.innerText = formatMB(downloadedBytes);
+                totalSizeSpan.innerText = formatMB(totalBytes);
+                
+                if (speedBytesPerSec > 0 && unityLoadProgress < 0.99) {
+                    let speedMB = speedBytesPerSec / (1024 * 1024);
+                    speedHintSpan.innerText = `⚡ ${speedMB.toFixed(1)} MB/s`;
+                } else if (unityLoadProgress >= 0.99) {
+                    speedHintSpan.innerText = `即將完成！`;
+                } else {
+                    speedHintSpan.innerText = `載入中...`;
+                }
+            }
+
+            // 獲取資源大小 - 使用固定路徑
+            async function fetchResourceSizes() {
+                const urls = [
+                    'Build/docs.data.unityweb',
+                    'Build/docs.framework.js.unityweb',
+                    'Build/docs.wasm.unityweb'
+                ];
+                let total = 0;
+                for (const url of urls) {
+                    try {
+                        const response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+                        if (response.ok) {
+                            const length = response.headers.get('content-length');
+                            if (length) total += parseInt(length, 10) || 0;
+                            console.log(`${url}: ${formatMB(parseInt(length))}`);
+                        } else {
+                            console.warn(`無法獲取 ${url}: HTTP ${response.status}`);
+                        }
+                    } catch (err) {
+                        console.warn(`無法獲取 ${url}:`, err);
+                    }
+                }
+                totalBytes = total;
+                if (totalBytes > 0) {
+                    sizeFetched = true;
+                    totalSizeSpan.innerText = formatMB(totalBytes);
+                    updateDownloadUI();
+                    console.log(`總大小: ${formatMB(totalBytes)}`);
+                } else {
+                    totalSizeSpan.innerText = "?? MB";
+                    console.warn("無法獲取文件大小");
+                }
+            }
+
+            function onUnityProgress(progress) {
+                const now = performance.now();
+                const deltaTime = (now - lastProgressTime) / 1000;
+                const deltaProgress = progress - lastProgressValue;
+                if (deltaTime > 0.05 && deltaProgress > 0 && sizeFetched && totalBytes > 0) {
+                    speedBytesPerSec = (totalBytes * deltaProgress) / deltaTime;
+                    if (speedBytesPerSec > 200 * 1024 * 1024) speedBytesPerSec = 200 * 1024 * 1024;
+                }
+                lastProgressValue = progress;
+                lastProgressTime = now;
+                unityLoadProgress = Math.min(0.999, Math.max(0, progress));
+                updateDownloadUI();
+                console.log(`載入進度: ${Math.round(progress * 100)}%`);
+            }
+
+            function unityShowBanner(msg, type) {
+                const div = document.createElement('div');
+                div.innerHTML = msg;
+                warningBanner.appendChild(div);
+                if (type == 'error') {
+                    div.style = 'background: red; padding: 10px; color:white; border-radius:8px; margin:5px;';
+                } else if (type == 'warning') {
+                    div.style = 'background: yellow; padding: 10px; border-radius:8px; margin:5px;';
+                    setTimeout(() => { if(warningBanner.contains(div)) warningBanner.removeChild(div); }, 5000);
+                }
+                warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+            }
+
+            // 行動裝置 viewport 設定
+            if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                const meta = document.createElement('meta');
+                meta.name = 'viewport';
+                meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+                document.head.appendChild(meta);
+            }
+
+            // Unity 配置 - 使用固定路徑
+            const config = {
+                dataUrl: "Build/docs.data.unityweb",
+                frameworkUrl: "Build/docs.framework.js.unityweb",
+                codeUrl: "Build/docs.wasm.unityweb",
+                symbolsUrl: "Build/docs.symbols.json.unityweb",
+                streamingAssetsUrl: "StreamingAssets",
+                companyName: "Ray Liu",
+                productName: "Ray公司大冒險",
+                productVersion: "1.0",
+                showBanner: unityShowBanner,
+            };
+
+            console.log("開始獲取資源大小...");
+            fetchResourceSizes();
+
+            console.log("開始載入 Unity...");
+            const script = document.createElement("script");
+            script.src = "Build/docs.loader.js";
+            script.onerror = function() {
+                console.error("無法載入 Unity loader");
+                const errorDiv = document.createElement('div');
+                errorDiv.style.background = '#c0392b';
+                errorDiv.style.color = 'white';
+                errorDiv.style.padding = '12px 24px';
+                errorDiv.style.borderRadius = '60px';
+                errorDiv.style.marginTop = '20px';
+                errorDiv.innerText = '⚠️ 無法載入遊戲，請檢查 Build 文件夾是否存在';
+                const loaderCard = document.querySelector('#customLoader .loader-card');
+                if (loaderCard) loaderCard.appendChild(errorDiv);
+            };
+            script.onload = () => {
+                console.log("loader.js 載入完成");
+                if (typeof createUnityInstance !== 'undefined') {
+                    console.log("開始創建 Unity 實例...");
+                    createUnityInstance(canvas, config, onUnityProgress)
+                        .then((unityInstance) => {
+                            console.log("Unity 實例創建成功！遊戲開始！");
+                            // 載入完成，淡出覆蓋層
+                            const overlay = document.getElementById('customLoader');
+                            if (overlay) {
+                                overlay.style.opacity = "0";
+                                setTimeout(() => {
+                                    overlay.style.display = "none";
+                                }, 500);
+                            }
+                            unityLoadProgress = 1;
+                            updateDownloadUI();
+                            window.unityInstance = unityInstance;
+                        })
+                        .catch((message) => {
+                            console.error("Unity 啟動錯誤:", message);
+                            const errorDiv = document.createElement('div');
+                            errorDiv.style.background = '#c0392b';
+                            errorDiv.style.color = 'white';
+                            errorDiv.style.padding = '12px 24px';
+                            errorDiv.style.borderRadius = '60px';
+                            errorDiv.style.marginTop = '20px';
+                            errorDiv.innerText = '⚠️ 遊戲載入失敗: ' + message;
+                            const loaderCard = document.querySelector('#customLoader .loader-card');
+                            if (loaderCard) loaderCard.appendChild(errorDiv);
+                        });
+                } else {
+                    console.error("createUnityInstance 未定義");
+                }
+            };
+            document.body.appendChild(script);
+
+            // 定時更新速度顯示
+            setInterval(() => {
+                if (sizeFetched && totalBytes > 0 && unityLoadProgress > 0 && unityLoadProgress < 1) {
+                    if (speedBytesPerSec > 0) {
+                        speedHintSpan.innerHTML = `⚡ ${(speedBytesPerSec / (1024*1024)).toFixed(1)} MB/s`;
+                    }
+                    updateDownloadUI();
+                }
+            }, 300);
+        })();
+    </script>
+</body>
+</html>
